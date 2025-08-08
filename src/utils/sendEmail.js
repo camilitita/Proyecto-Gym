@@ -33,7 +33,7 @@ export const sendEmailWithQR = async (email, qrCodeDataURL, name) => {
       <p>Saludos cordiales,</p>
       <p>El equipo de MamisFitness</p>
     `,
-    // ¡Aquí está la clave! Adjuntamos la imagen con su Content ID
+
     attachments: [
       {
         filename: 'codigo_qr.png', // Nombre del archivo cuando el usuario lo descargue
@@ -50,7 +50,7 @@ export const sendEmailWithQR = async (email, qrCodeDataURL, name) => {
     console.log(`Email enviado a ${email}`);
   } catch (error) {
     console.error(`Error al enviar el email a ${email}:`, error);
-    // Añadir un mensaje más útil si el error es de autenticación o conexión
+
     if (error.responseCode === 535) {
       throw new Error('Error de autenticación con el servidor de correo. Verifica EMAIL_USER y EMAIL_PASS.');
     } else {
