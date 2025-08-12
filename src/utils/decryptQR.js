@@ -1,39 +1,33 @@
-// utils/decryptQR.js
-import CryptoJS from "crypto-js";
+import crypto from "crypto";
 
-const SECRET_KEY = process.env.QR_SECRET_KEY;
+const SECRET_KEY = process.env.QR_SECRET_KEY || "clave-super-secreta";
+const IV_LENGTH = 16;
 
-// Convierte Base64 seguro para URL a Base64 normal
 const fromBase64UrlSafe = (base64url) => {
   let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
-  while (base64.length % 4 !== 0) {
-    base64 += "="; // rellenar padding
-  }
+  while (base64.length % 4 !== 0) base64 += "=";
   return base64;
 };
 
 const decryptQR = (encryptedText) => {
-  if (!encryptedText) {
-    console.error("❌ No se proporcionó texto encriptado.");
-    return null;
-  }
-
   try {
-    const base64 = fromBase64UrlSafe(encryptedText);
+    const raw = Buffer.from(fromBase64UrlSafe(encryptedText), "base64");
 
-    // AES -> bytes -> UTF8
-    const bytes = CryptoJS.AES.decrypt(base64, SECRET_KEY);
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    const iv = raw.subarray(0, IV_LENGTH);
+    const encryptedData = raw.subarray(IV_LENGTH);
 
-    if (!decrypted) {
-      console.error("⚠️ La desencriptación resultó vacía. Clave incorrecta o QR corrupto.");
-      return null;
-    }
+    const decipher = crypto.createDecipheriv(
+      "aes-256-cbc",
+      Buffer.from(SECRET_KEY, "utf-8"),
+      iv
+    );
 
-    console.log("✅ Texto desencriptado:", decrypted);
+    let decrypted = decipher.update(encryptedData, undefined, "utf8");
+    decrypted += decipher.final("utf8");
+
     return decrypted;
-  } catch (e) {
-    console.error("❌ Error en la desencriptación:", e);
+  } catch (err) {
+    console.error("❌ Error desencriptando QR:", err.message);
     return null;
   }
 };

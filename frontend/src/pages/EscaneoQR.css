@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.escaneo-qr {
+    font-family: 'Lato', sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Título */
+.escaneo-qr h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+/* Select cámara con flecha personalizada */
+.escaneo-qr .select-camera {
+    padding: 8px 36px 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #ffd700;
+    background-color: #ffd700;
+    color: #000;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23000000' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    margin-right: 12px;
+}
+
+.escaneo-qr .select-camera:focus {
+    outline: none;
+    border-color: #e6c200;
+}
+
+.escaneo-qr .select-camera:hover {
+  background-color: #000;
+  color: #fff;
+  transition: ease-out 0.25s;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffd500' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+/* Botón iniciar escaneo */
+.escaneo-qr .btn-scan {
+    background-color: #ffd700;
+    border: none;
+    color: #000;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.escaneo-qr .btn-scan:hover {
+    border-color: #ffd700;
+    background-color: #000;
+    transition: all 0.1s ease;
+    color: #fff;
+}
+
+
+/* Video cámara */
+.escaneo-qr video {
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    border: 3px solid #ffd700;
+}
+
+/* Resultado */
+.escaneo-qr .resultado {
+    margin-top: 20px;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.escaneo-qr .resultado.success {
+    background-color: #1b3d1b;
+    border: 2px solid #4caf50;
+}
+
+.escaneo-qr .resultado.error {
+    background-color: #3d1b1b;
+    border: 2px solid #f44336;
+}

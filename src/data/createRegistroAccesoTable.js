@@ -6,7 +6,7 @@ const createRegistroAccesoTable = async () => {
       id SERIAL PRIMARY KEY,
       usuario_id INTEGER NOT NULL,
       admin_id INTEGER NOT NULL,
-      fecha_acceso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      fecha_acceso TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (usuario_id) REFERENCES users(id),
       FOREIGN KEY (admin_id) REFERENCES users(id)
     )

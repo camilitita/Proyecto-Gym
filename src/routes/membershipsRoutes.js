@@ -13,9 +13,13 @@ import { validateMembership } from "../middlewares/inputValidator.js";
 const router = express.Router();
 
 router.get("/", getAllMemberships);
+
+// Obtener membresía por usuario → ahora /memberships/user/:userId
+router.get("/user/:userId", getMembershipByUserId);
+
 router.get("/:id", getMembershipById);
-router.get("/:userId", getMembershipByUserId);
-router.put("/:id", validateMembership, updateMembership); // Middleware aquí
+
+router.put("/:id", validateMembership, updateMembership);
 router.patch("/deactivate/:userId", deactivateMembership);
 router.get("/check/:userId", checkMembershipStatus);
 

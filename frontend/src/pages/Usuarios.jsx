@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import './Usuarios.css'; // Importa los estilos nuevos
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -15,7 +16,6 @@ const Usuarios = () => {
       const response = await axios.get('http://localhost:5001/api/users');
       const allUsers = response.data.data;
 
-      // Filtrar usuarios por rol
       setUsuarios(allUsers.filter(user => user.role === 'user'));
       setAdmins(allUsers.filter(user => user.role === 'admin'));
 
@@ -36,12 +36,12 @@ const Usuarios = () => {
 
   const toggleUserActiveStatus = async (userId, currentStatus) => {
     try {
-      const endpoint = currentStatus ?
-        `http://localhost:5001/api/users/${userId}/deactivate` :
-        `http://localhost:5001/api/users/${userId}/activate`;
+      const endpoint = currentStatus
+        ? `http://localhost:5001/api/users/${userId}/deactivate`
+        : `http://localhost:5001/api/users/${userId}/activate`;
 
       await axios.patch(endpoint);
-      fetchUsuarios(); // Vuelve a cargar la lista para reflejar el cambio
+      fetchUsuarios();
     } catch (err) {
       console.error(`Error al cambiar el estado del usuario ${userId}:`, err);
       setError(`No se pudo ${currentStatus ? 'desactivar' : 'activar'} el usuario.`);
@@ -52,30 +52,27 @@ const Usuarios = () => {
   if (error) return <p className="text-center mt-5 text-danger">{error}</p>;
 
   return (
-    <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Gestión de Usuarias</h1>
+    <div className="usuarios-container">
+      <h1>Gestión de Usuarias</h1>
 
       <div className="d-flex justify-content-between align-items-center mb-4">
-        {/* Enlace actualizado para la ruta anidada */}
-        <Link to="/admin/usuarios/registro" className="btn btn-success btn-icon-split">
-          <span className="icon text-white-50">
-            <i className="fas fa-user-plus"></i>
-          </span>
-          <span className="text">Registrar Nueva Usuaria</span>
+        <Link to="/admin/usuarios/registro" className="btn-registrar">
+          <i className="fas fa-user-plus"></i>
+          Registrar Nueva Usuaria
         </Link>
       </div>
 
       {/* Tabla de Usuarios Regulares */}
-      <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <h6 className="m-0 font-weight-bold text-primary">Lista de Usuarios (Miembros)</h6>
+      <div className="card mb-4">
+        <div className="card-header">
+          Lista de Usuarios (Miembros)
         </div>
         <div className="card-body">
           {usuarios.length === 0 ? (
             <p className="text-center">No hay usuarios (miembros) registrados.</p>
           ) : (
             <div className="table-responsive">
-              <table className="table table-bordered" id="dataTableUsers" width="100%" cellSpacing="0">
+              <table>
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -95,9 +92,9 @@ const Usuarios = () => {
                       <td>{user.role}</td>
                       <td>
                         {user.is_active ? (
-                          <span className="badge badge-success">Activo</span>
+                          <span className="badge-success">Activo</span>
                         ) : (
-                          <span className="badge badge-danger">Inactivo</span>
+                          <span className="badge-danger">Inactivo</span>
                         )}
                       </td>
                       <td>
@@ -125,19 +122,17 @@ const Usuarios = () => {
         </div>
       </div>
 
-      <hr className="my-5" />
-
       {/* Tabla de Administradores */}
-      <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <h6 className="m-0 font-weight-bold text-primary">Lista de Administradores</h6>
+      <div className="card mb-4">
+        <div className="card-header">
+          Lista de Administradores
         </div>
         <div className="card-body">
           {admins.length === 0 ? (
             <p className="text-center">No hay administradores registrados.</p>
           ) : (
             <div className="table-responsive">
-              <table className="table table-bordered" id="dataTableAdmins" width="100%" cellSpacing="0">
+              <table>
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -157,9 +152,9 @@ const Usuarios = () => {
                       <td>{admin.role}</td>
                       <td>
                         {admin.is_active ? (
-                          <span className="badge badge-success">Activo</span>
+                          <span className="badge-success">Activo</span>
                         ) : (
-                          <span className="badge badge-danger">Inactivo</span>
+                          <span className="badge-danger">Inactivo</span>
                         )}
                       </td>
                       <td>

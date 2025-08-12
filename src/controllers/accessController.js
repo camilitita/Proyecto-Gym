@@ -2,46 +2,40 @@ import { validateAccessService } from "../models/accessModel.js";
 import handleResponse from "../utils/handleResponse.js";
 import decryptQR from "../utils/decryptQR.js";
 import pool from "../config/db.js";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
 
-// Función para limpiar caracteres raros del QR y dejarlo en formato válido
-const sanitizeQR = (qr) => {
-  return qr
-    .replace(/[^A-Za-z0-9\-_]/g, "") // Mantener solo caracteres válidos Base64 URL-safe
-    .trim();
-};
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const validateAccess = async (req, res, next) => {
   try {
     let { qr_code } = req.body;
 
-    console.log("🔍 QR bruto recibido:", JSON.stringify(qr_code));
+    console.log("🔍 QR recibido:", qr_code);
 
-    // Limpiamos antes de desencriptar
-    qr_code = sanitizeQR(qr_code);
-    console.log("🧹 QR limpio para desencriptar:", qr_code);
+    const userId = decryptQR(qr_code);
 
-    // Intentar desencriptar
-    let userId;
-    try {
-      userId = decryptQR(qr_code);
-      if (!userId) {
-        console.warn("⚠️ La desencriptación resultó vacía.");
-        return handleResponse(res, 400, "Formato de QR inválido o desencriptación fallida.");
-      }
-      console.log("✅ ID de usuario desencriptado:", userId);
-    } catch (decryptError) {
-      console.error("Error al desencriptar el QR:", decryptError);
-      return handleResponse(res, 400, "Error en el formato del código QR.");
+    if (!userId) {
+      console.warn("⚠️ QR inválido o desencriptación fallida.");
+      return res.status(400).json({
+        message: "Formato de QR inválido o desencriptación fallida."
+      });
     }
 
-    // Buscar datos de membresía
+    console.log("✅ ID de usuario desencriptado:", userId);
+
     const accessInfo = await validateAccessService(userId);
-    if (!accessInfo)
-      return handleResponse(res, 403, "Acceso denegado: sin membresía activa");
+    if (!accessInfo) {
+      return res.status(403).json({
+        message: "Acceso denegado: sin membresía activa"
+      });
+    }
 
-    const adminId = 1; // por ahora fijo
+    const adminId = 1; // Temporal, cambiar por el admin real
 
-    // Evitar accesos duplicados en menos de 2 minutos
+    // Verificar si el acceso ya se registró en los últimos 2 minutos
     const recentlyAccessed = await pool.query(
       `
       SELECT 1 FROM registro_acceso
@@ -54,28 +48,30 @@ export const validateAccess = async (req, res, next) => {
 
     if (recentlyAccessed.rowCount > 0) {
       console.log("🛑 Acceso duplicado evitado.");
-      return handleResponse(res, 200, "Acceso ya registrado recientemente.", {
+      return res.status(200).json({
+        message: "Acceso ya registrado recientemente.",
         name: accessInfo.name,
         email: accessInfo.email,
         end_date: accessInfo.end_date
       });
     }
 
-    // Insertar el registro de acceso
-    try {
-      await pool.query(
-        "INSERT INTO registro_acceso (usuario_id, admin_id) VALUES ($1, $2)",
-        [userId, adminId]
-      );
-      console.log("✅ Acceso registrado en la base de datos");
-    } catch (insertError) {
-      console.error("❌ Error al registrar acceso en la base de datos:", insertError);
-    }
+    await pool.query(
+      "INSERT INTO registro_acceso (usuario_id, admin_id) VALUES ($1, $2)",
+      [userId, adminId]
+    );
 
-    // Responder con datos del usuario
-    handleResponse(res, 200, "Acceso permitido", accessInfo);
+    console.log("✅ Acceso registrado en la base de datos");
+
+    res.status(200).json({
+      message: "Acceso permitido",
+      name: accessInfo.name,
+      email: accessInfo.email,
+      end_date: accessInfo.end_date
+    });
+
   } catch (err) {
-    console.error("Error en el controlador validateAccess:", err);
+    console.error("Error en validateAccess:", err);
     next(err);
   }
 };

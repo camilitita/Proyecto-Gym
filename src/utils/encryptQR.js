@@ -1,29 +1,23 @@
-// utils/encryptQR.js
-import CryptoJS from "crypto-js";
+import crypto from "crypto";
 
-const SECRET_KEY = process.env.QR_SECRET_KEY;
-
-// Convierte Base64 normal a Base64 seguro para URL
-const toBase64UrlSafe = (base64) => {
-  return base64
-    .replace(/\+/g, "-") // + → -
-    .replace(/\//g, "_") // / → _
-    .replace(/=+$/, ""); // quitar padding
-};
+const SECRET_KEY = process.env.QR_SECRET_KEY || "clave-super-secreta"; // Debe tener 32 caracteres
+const IV_LENGTH = 16; // Longitud del IV en AES
 
 export const encryptText = (text) => {
-  if (!text) {
-    throw new Error("Texto vacío, no se puede encriptar.");
-  }
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(
+    "aes-256-cbc",
+    Buffer.from(SECRET_KEY, "utf-8"),
+    iv
+  );
 
-  // AES -> string Base64
-  const encryptedBase64 = CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+  let encrypted = cipher.update(text, "utf8", "base64");
+  encrypted += cipher.final("base64");
 
-  // Convertir a formato seguro para QR
-  const safeString = toBase64UrlSafe(encryptedBase64);
-
-  console.log("🔒 Texto original:", text);
-  console.log("📦 Encriptado Base64 seguro para QR:", safeString);
-
-  return safeString;
+  // Devolvemos IV + encrypted en Base64 URL-safe
+  const result = Buffer.concat([iv, Buffer.from(encrypted, "base64")]).toString("base64");
+  return result
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 };

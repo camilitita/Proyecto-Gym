@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.usuarios-container {
+    font-family: 'Lato', sans-serif;
+    background-color: transparent;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* Título principal */
+.usuarios-container h1 {
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+/* Botón de registrar */
+.usuarios-container .btn-registrar {
+    text-decoration: none;
+    background-color: #ffd700;
+    border: none;
+    color: #000;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usuarios-container .btn-registrar:hover {
+    background-color: #000;
+    border-color: #ffd700;
+    color: #fff;
+}
+
+/* Tarjeta de tabla */
+.usuarios-container .card {
+    background-color: #2a2a2a;
+    border: 2px solid #333;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Encabezado de tarjeta */
+.usuarios-container .card-header {
+    background-color: #000;
+    color: #ffd700;
+    font-weight: 700;
+}
+
+.usuarios-container .card-body {
+    background-color: #000;
+    font-weight: 600;
+}
+
+/* Tabla */
+.usuarios-container table {
+    color: #f1f1f1;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.usuarios-container th,
+.usuarios-container td {
+    padding: 12px;
+    border: 1px solid #444;
+}
+
+.usuarios-container thead th {
+    background-color: #000;
+    color: #ffd700;
+}
+
+.usuarios-container tbody tr:nth-child(even) {
+    background-color: #242424;
+}
+
+/* Badges */
+.badge-success {
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+/* Botones de acción */
+.usuarios-container .btn {
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-weight: 700;
+}
+
+.usuarios-container .btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: #fff;
+}
+
+.usuarios-container .btn-info:hover {
+    background-color: #138496;
+}
+
+.usuarios-container .btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #000;
+}
+
+.usuarios-container .btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.usuarios-container .btn-success {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+}
+
+.usuarios-container .btn-success:hover {
+    background-color: #218838;
+}

@@ -24,6 +24,10 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
+#content {
+  background-color: #373737; /* oscuro */
+  color: #fff;
+}
 /* Estilos de títulos */
 h1 {
   font-family: 'Lato', sans-serif;

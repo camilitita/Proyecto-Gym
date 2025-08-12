@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.registro-usuario {
+    font-family: 'Lato', sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.registro-usuario h2 {
+    text-align: center;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+.registro-usuario .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.registro-usuario label {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.registro-usuario input,
+.registro-usuario select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #ffd700;
+    background-color: #000;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Flechita negra → amarilla al hover */
+.registro-usuario select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffd700' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+}
+
+.registro-usuario select:hover {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+.registro-usuario input:focus,
+.registro-usuario select:focus {
+    border-color: #e6c200;
+}
+
+.registro-usuario button {
+    background-color: #ffd700;
+    border: 2px solid transparent;
+    color: #000;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.registro-usuario button:hover {
+    border-color: #ffd700;
+    background-color: #000;
+    color: #fff;
+}
+
+.alert {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.alert.success {
+    background-color: #1b3d1b;
+    border: 2px solid #4caf50;
+}
+
+.alert.error {
+    background-color: #3d1b1b;
+    border: 2px solid #f44336;
+}

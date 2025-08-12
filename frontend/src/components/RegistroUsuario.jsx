@@ -1,6 +1,6 @@
-// frontend/src/components/RegistroUsuario.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import "./RegistroUsuario.css"; // Importamos la hoja de estilos
 
 const RegistroUsuario = () => {
   const [form, setForm] = useState({
@@ -11,7 +11,6 @@ const RegistroUsuario = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
-  // Limpia el Base64 para que no meta caracteres raros
   const sanitizeBase64 = (text) => {
     return text
       .replace(/\+/g, "-")
@@ -35,7 +34,6 @@ const RegistroUsuario = () => {
       const res = await axios.post("http://localhost:5001/api/users", form);
 
       if (res.data.qr_code) {
-        // Limpiar QR antes de mostrarlo o enviarlo
         const cleanedQR = sanitizeBase64(res.data.qr_code);
         console.log("QR limpio generado:", cleanedQR);
       }
@@ -52,7 +50,7 @@ const RegistroUsuario = () => {
   };
 
   return (
-    <div className="container">
+    <div className="registro-usuario">
       <h2>Registro de Usuario</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -60,7 +58,6 @@ const RegistroUsuario = () => {
           <input
             type="text"
             name="name"
-            className="form-control"
             value={form.name}
             onChange={handleChange}
             required
@@ -72,7 +69,6 @@ const RegistroUsuario = () => {
           <input
             type="email"
             name="email"
-            className="form-control"
             value={form.email}
             onChange={handleChange}
             required
@@ -81,27 +77,20 @@ const RegistroUsuario = () => {
 
         <div className="form-group">
           <label>Rol</label>
-          <select
-            name="role"
-            className="form-control"
-            value={form.role}
-            onChange={handleChange}
-          >
+          <select name="role" value={form.role} onChange={handleChange}>
             <option value="user">Usuario</option>
             <option value="admin">Administrador</option>
           </select>
         </div>
 
-        <button className="btn btn-primary" type="submit" disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? "Registrando..." : "Registrar"}
         </button>
       </form>
 
       {message && (
         <div
-          className={`alert mt-3 alert-${
-            message.type === "success" ? "success" : "danger"
-          }`}
+          className={`alert ${message.type === "success" ? "success" : "error"}`}
         >
           {message.text}
         </div>

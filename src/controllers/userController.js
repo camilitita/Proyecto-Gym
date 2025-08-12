@@ -1,4 +1,4 @@
-// controllers/userController.js
+
 import {
   activateUserService,
   createUserService,
@@ -11,6 +11,8 @@ import handleResponse from "../utils/handleResponse.js";
 import { encryptText } from "../utils/encryptQR.js";
 import QRCode from "qrcode";
 import { sendEmailWithQR } from "../utils/sendEmail.js";
+import { createMembershipService } from "../models/membershipsModel.js";
+import dayjs from "dayjs";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -18,6 +20,7 @@ export const createUser = async (req, res, next) => {
 
     console.log("Creando usuario con:", { name, email });
 
+    // 1️⃣ Crear usuario
     const newUser = await createUserService(
       name,
       email,
@@ -25,34 +28,45 @@ export const createUser = async (req, res, next) => {
       role || "user"
     );
 
-    // 🔐 Generar QR seguro (base64url)
-    let encryptedData = encryptText(newUser.id.toString());
+    // 2️⃣ Crear membresía inicial (ej. válida por 1 mes)
+    const startDate = dayjs().format("YYYY-MM-DD");
+    const endDate = dayjs().add(30, "day").format("YYYY-MM-DD");
 
-    // Reemplazar caracteres conflictivos para que el lector físico no los distorsione
-    encryptedData = encryptedData
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
+    const membership = await createMembershipService(
+      newUser.id,
+      startDate,
+      endDate
+    );
 
-    console.log("Texto encriptado seguro para QR:", encryptedData);
+    console.log("✅ Membresía creada:", membership);
 
-    const qrCodeDataURL = await QRCode.toDataURL(encryptedData);
-    console.log("QR Code Data URL generado:", qrCodeDataURL);
+    // 3️⃣ Generar texto encriptado limpio (para escáner)
+    const encryptedQR = encryptText(newUser.id.toString());
+    console.log("🔐 Texto encriptado seguro para QR:", encryptedQR);
 
+    // 4️⃣ Generar imagen QR (base64) para email o frontend
+    const qrCodeDataURL = await QRCode.toDataURL(encryptedQR);
+
+    // 5️⃣ Guardar tanto el texto encriptado como la imagen QR en la DB
     await updateUserService(
       newUser.id,
       name,
       email,
-      qrCodeDataURL,
-      "user",
+      encryptedQR,
+      role || "user",
       true
     );
+
+    // 6️⃣ Enviar email con el QR
     await sendEmailWithQR(email, qrCodeDataURL, name);
 
-    handleResponse(res, 201, "Usuario registrado y QR enviado", {
+    handleResponse(res, 201, "Usuario registrado con membresía y QR enviado", {
       user: newUser,
-      qr_code: qrCodeDataURL
+      membership,
+      qr_code_text: encryptedQR,
+      qr_code_image: qrCodeDataURL
     });
+
   } catch (err) {
     console.error("Error al crear usuario en el controlador:", err);
     next(err);

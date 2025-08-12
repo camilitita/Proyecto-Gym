@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const RegistroAccesos = () => {
   const [accesos, setAccesos] = useState([]);
@@ -17,13 +23,19 @@ const RegistroAccesos = () => {
     });
   };
 
-  const fetchAccesos = async () => {
+  const fetchAccesos = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
 
       Object.entries(filtros).forEach(([key, value]) => {
-        if (value) params.append(key, value);
+        if (value) {
+          if (key === 'hasta') {
+            params.append(key, `${value}T23:59:59`);
+          } else {
+            params.append(key, value);
+          }
+        }
       });
 
       const res = await fetch(`http://localhost:5001/api/registro-acceso?${params.toString()}`);
@@ -34,11 +46,11 @@ const RegistroAccesos = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filtros]);
 
   useEffect(() => {
     fetchAccesos();
-  }, []); // Carga inicial
+  }, [fetchAccesos]);
 
   const handleFiltrar = (e) => {
     e.preventDefault();
@@ -54,6 +66,21 @@ const RegistroAccesos = () => {
     });
     fetchAccesos();
   };
+
+const formatFechaCaracas = (fecha) => {
+  return new Date(fecha).toLocaleString('es-VE', {
+    timeZone: 'America/Caracas',
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+};
+
+
 
   return (
     <div className="container mt-4">
@@ -130,7 +157,7 @@ const RegistroAccesos = () => {
               <tbody>
                 {accesos.map((a) => (
                   <tr key={a.id}>
-                    <td>{new Date(a.fecha_acceso).toLocaleString()}</td>
+                    <td>{formatFechaCaracas(a.fecha_acceso)}</td>
                     <td>{a.usuario_nombre}</td>
                     <td>{a.usuario_email}</td>
                     <td>{a.admin_nombre}</td>
