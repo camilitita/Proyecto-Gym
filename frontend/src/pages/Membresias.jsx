@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Membresias = () => {
   const [activeMemberships, setActiveMemberships] = useState([]);
@@ -13,9 +13,8 @@ const Membresias = () => {
     try {
       setLoading(true);
       const response = await axios.get('http://localhost:5001/api/memberships');
-      const allMemberships = response.data.data; // Asumiendo que la API devuelve los datos en response.data.data
+      const allMemberships = response.data.data;
 
-      // Filtrar membresías por estado
       setActiveMemberships(allMemberships.filter(mem => mem.is_active));
       setInactiveMemberships(allMemberships.filter(mem => !mem.is_active));
 
@@ -34,10 +33,25 @@ const Membresias = () => {
     fetchMemberships();
   }, []);
 
+  // Función para renovar membresía
+  const handleRenew = async (id) => {
+    const confirmed = window.confirm("¿Está seguro que desea renovar esta membresía por un mes más?");
+    if (!confirmed) return;
+
+    try {
+      await axios.patch(`http://localhost:5001/api/memberships/renew/${id}`);
+      alert("Membresía renovada exitosamente.");
+      fetchMemberships(); // Recarga la lista para actualizar las tablas
+    } catch (error) {
+      console.error("Error al renovar membresía:", error);
+      alert("Error al renovar la membresía. Intente de nuevo más tarde.");
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString(); // Formato de fecha local
+    return date.toLocaleDateString();
   };
 
   if (loading) return <p className="text-center mt-5">Cargando membresías...</p>;
@@ -47,7 +61,7 @@ const Membresias = () => {
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Gestión de Membresías</h1>
 
-      {/* Tabla de Membresías Activas */}
+      {/* Membresías Activas */}
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <h6 className="m-0 font-weight-bold text-primary">Membresías Activas</h6>
@@ -57,10 +71,11 @@ const Membresias = () => {
             <p className="text-center">No hay membresías activas.</p>
           ) : (
             <div className="table-responsive">
-              <table className="table table-bordered" id="dataTableActiveMemberships" width="100%" cellSpacing="0">
+              <table className="table table-bordered" width="100%" cellSpacing="0">
                 <thead>
                   <tr>
                     <th>ID Membresía</th>
+                    <th>Nombre Usuaria</th> {/* NUEVO */}
                     <th>ID Usuario</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
@@ -69,19 +84,14 @@ const Membresias = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {activeMemberships.map((membership) => (
+                  {activeMemberships.map(membership => (
                     <tr key={membership.id}>
                       <td>{membership.id}</td>
+                      <td>{membership.user_name}</td> {/* MOSTRAR NOMBRE */}
                       <td>{membership.user_id}</td>
                       <td>{formatDate(membership.start_date)}</td>
                       <td>{formatDate(membership.end_date)}</td>
-                      <td>
-                        {membership.is_active ? (
-                          <span className="badge badge-success">Activa</span>
-                        ) : (
-                          <span className="badge badge-danger">Inactiva</span>
-                        )}
-                      </td>
+                      <td><span className="badge badge-success">Activa</span></td>
                       <td>
                         <button
                           onClick={() => navigate(`/admin/membresias/editar/${membership.id}`)}
@@ -100,9 +110,9 @@ const Membresias = () => {
         </div>
       </div>
 
-      <hr className="my-5" /> {/* Separador entre tablas */}
+      <hr className="my-5" />
 
-      {/* Tabla de Membresías Inactivas */}
+      {/* Membresías Inactivas */}
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <h6 className="m-0 font-weight-bold text-primary">Membresías Inactivas</h6>
@@ -112,10 +122,11 @@ const Membresias = () => {
             <p className="text-center">No hay membresías inactivas.</p>
           ) : (
             <div className="table-responsive">
-              <table className="table table-bordered" id="dataTableInactiveMemberships" width="100%" cellSpacing="0">
+              <table className="table table-bordered" width="100%" cellSpacing="0">
                 <thead>
                   <tr>
                     <th>ID Membresía</th>
+                    <th>Nombre Usuaria</th> {/* NUEVO */}
                     <th>ID Usuario</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
@@ -124,19 +135,14 @@ const Membresias = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {inactiveMemberships.map((membership) => (
+                  {inactiveMemberships.map(membership => (
                     <tr key={membership.id}>
                       <td>{membership.id}</td>
+                      <td>{membership.user_name}</td> {/* MOSTRAR NOMBRE */}
                       <td>{membership.user_id}</td>
                       <td>{formatDate(membership.start_date)}</td>
                       <td>{formatDate(membership.end_date)}</td>
-                      <td>
-                        {membership.is_active ? (
-                          <span className="badge badge-success">Activa</span>
-                        ) : (
-                          <span className="badge badge-danger">Inactiva</span>
-                        )}
-                      </td>
+                      <td><span className="badge badge-danger">Inactiva</span></td>
                       <td>
                         <button
                           onClick={() => navigate(`/admin/membresias/editar/${membership.id}`)}
@@ -144,6 +150,13 @@ const Membresias = () => {
                           title="Editar membresía"
                         >
                           <i className="fas fa-edit"></i>
+                        </button>{' '}
+                        <button
+                          onClick={() => handleRenew(membership.id)}
+                          className="btn btn-success btn-sm"
+                          title="Renovar membresía"
+                        >
+                          <i className="fas fa-redo"></i> Renovar
                         </button>
                       </td>
                     </tr>

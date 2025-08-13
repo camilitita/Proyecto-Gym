@@ -11,8 +11,6 @@ export const getUserByIdService = async (id) => {
   return result.rows[0];
 };
 
-
-
 export const createUserService = async (name, email, qr_code) => {
   const client = await pool.connect();
   try {
@@ -29,17 +27,34 @@ export const createUserService = async (name, email, qr_code) => {
     // Calcular fechas de membresía
     const start_date = new Date();
     const end_date = new Date();
-    end_date.setMonth(end_date.getMonth() + 1); // 1 mes de duración
+    end_date.setMonth(end_date.getMonth() + 1);
 
-    // Crear membresía
-    await client.query(
+    // Verificar membresía activa existente que se solape
+    const existingMembership = await client.query(
+      `SELECT * FROM memberships
+        WHERE user_id = $1
+          AND is_active = true
+          AND NOT (end_date < $2 OR start_date > $3)
+        LIMIT 1`,
+      [newUser.id, start_date, end_date]
+    );
+
+    if (existingMembership.rows.length > 0) {
+      // Ya existe membresía activa en rango, no crear otra
+      await client.query("COMMIT");
+      return { user: newUser, membership: existingMembership.rows[0] };
+    }
+
+    // Si no existe, crear membresía nueva
+    const membershipResult = await client.query(
       `INSERT INTO memberships (user_id, start_date, end_date, is_active)
-      VALUES ($1, $2, $3, true)`,
+        VALUES ($1, $2, $3, true)
+       RETURNING *`,
       [newUser.id, start_date, end_date]
     );
 
     await client.query("COMMIT");
-    return newUser;
+    return { user: newUser, membership: membershipResult.rows[0] };
   } catch (error) {
     await client.query("ROLLBACK");
     throw error;

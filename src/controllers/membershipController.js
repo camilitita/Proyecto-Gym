@@ -4,7 +4,8 @@ import {
   updateMembershipService,
   deactivateMembershipService,
   checkMembershipStatusService,
-  getMembershipByIdService
+  getMembershipByIdService,
+  renewMembershipService
 } from "../models/membershipsModel.js";
 import handleResponse from "../utils/handleResponse.js";
 
@@ -35,7 +36,14 @@ export const updateMembership = async (req, res, next) => {
     const { id } = req.params;
     const { start_date, end_date, is_active } = req.body;
 
-    const updated = await updateMembershipService(id, start_date, end_date, is_active);
+    const today = new Date();
+    const endDateObj = new Date(end_date);
+
+    // Si la fecha de vencimiento ya pasó, la membresía se marca inactiva
+    const activeStatus = endDateObj >= today;
+
+    // Actualizar membresía con el is_active calculado
+    const updated = await updateMembershipService(id, start_date, end_date, activeStatus);
 
     if (!updated) {
       return res.status(404).json({
@@ -87,5 +95,21 @@ export const getMembershipById = async (req, res, next) => {
     handleResponse(res, 200, "Membresía obtenida correctamente.", membership);
   } catch (err) {
     next(err);
+  }
+};
+
+export const renewMembership = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const renewed = await renewMembershipService(id);
+
+    if (!renewed) {
+      return handleResponse(res, 404, "Membresía no encontrada o ya activa.");
+    }
+
+    handleResponse(res, 200, "Membresía renovada exitosamente", renewed);
+  } catch (error) {
+    next(error);
   }
 };

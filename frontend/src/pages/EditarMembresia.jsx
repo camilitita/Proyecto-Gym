@@ -8,7 +8,7 @@ const EditarMembresia = () => {
   const [formData, setFormData] = useState({
     start_date: '',
     end_date: '',
-    is_active: true,
+    is_active: 'true', // ahora string para el select
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -21,18 +21,22 @@ const EditarMembresia = () => {
         const membership = response.data.data; // Asumiendo que la API devuelve los datos en response.data.data
 
         // Formatear las fechas a YYYY-MM-DD para el input type="date"
-        const formattedStartDate = membership.start_date ? new Date(membership.start_date).toISOString().split('T')[0] : '';
-        const formattedEndDate = membership.end_date ? new Date(membership.end_date).toISOString().split('T')[0] : '';
+        const formattedStartDate = membership.start_date
+          ? new Date(membership.start_date).toISOString().split('T')[0]
+          : '';
+        const formattedEndDate = membership.end_date
+          ? new Date(membership.end_date).toISOString().split('T')[0]
+          : '';
 
         setFormData({
           start_date: formattedStartDate,
           end_date: formattedEndDate,
-          is_active: membership.is_active,
+          is_active: membership.is_active ? 'true' : 'false', // convertir booleano a string para el select
         });
         setLoading(false);
       } catch (err) {
-        console.error("Error al cargar datos de la membresía:", err);
-        setError("No se pudieron cargar los datos de la membresía.");
+        console.error('Error al cargar datos de la membresía:', err);
+        setError('No se pudieron cargar los datos de la membresía.');
         setLoading(false);
       }
     };
@@ -40,10 +44,10 @@ const EditarMembresia = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     });
   };
 
@@ -53,13 +57,30 @@ const EditarMembresia = () => {
     setError('');
 
     try {
-      const response = await axios.put(`http://localhost:5001/api/memberships/${id}`, formData);
+      // Convertir is_active string a boolean
+      const isActiveBoolean = formData.is_active === 'true';
+
+      const response = await axios.put(`http://localhost:5001/api/memberships/${id}`, {
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        is_active: isActiveBoolean,
+      });
 
       if (response.status === 200) {
-        setMessage('Membresía actualizada exitosamente.');
+        // Verificar si la membresía debe ir a inactivos (fecha fin < hoy)
+        const today = new Date();
+        const endDate = new Date(formData.end_date);
+
+        let extraMessage = '';
+        if (endDate < today) {
+          extraMessage = 'La membresía ha sido movida a inactiva por la fecha de vencimiento.';
+        }
+
+        setMessage('Membresía actualizada exitosamente. ' + extraMessage);
+
         setTimeout(() => {
-          navigate('/membresias'); // Redirige de vuelta a la lista de membresías
-        }, 1500);
+          navigate('/admin/membresias'); // Redirige a la lista de membresías
+        }, 2000);
       } else {
         setMessage('Actualización completada, pero respuesta inesperada.');
       }
@@ -87,8 +108,16 @@ const EditarMembresia = () => {
           <h6 className="m-0 font-weight-bold text-primary">Formulario de Edición de Membresía</h6>
         </div>
         <div className="card-body">
-          {message && <div className="alert alert-success" role="alert">{message}</div>}
-          {error && <div className="alert alert-danger" role="alert">{error}</div>}
+          {message && (
+            <div className="alert alert-success" role="alert">
+              {message}
+            </div>
+          )}
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -117,16 +146,18 @@ const EditarMembresia = () => {
               />
             </div>
 
-            <div className="form-group form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
+            <div className="form-group">
+              <label htmlFor="is_active">Estado de la Membresía</label>
+              <select
+                className="form-control"
                 id="is_active"
                 name="is_active"
-                checked={formData.is_active}
+                value={formData.is_active}
                 onChange={handleChange}
-              />
-              <label className="form-check-label" htmlFor="is_active">Membresía Activa</label>
+              >
+                <option value="true">Activa</option>
+                <option value="false">Inactiva</option>
+              </select>
             </div>
 
             <button type="submit" className="btn btn-primary mt-3">
@@ -135,7 +166,7 @@ const EditarMembresia = () => {
             <button
               type="button"
               className="btn btn-secondary mt-3 ml-2"
-              onClick={() => navigate('/membresias')}
+              onClick={() => navigate('/admin/membresias')}
             >
               Cancelar
             </button>

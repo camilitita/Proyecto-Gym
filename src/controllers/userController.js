@@ -20,34 +20,26 @@ export const createUser = async (req, res, next) => {
 
     console.log("Creando usuario con:", { name, email });
 
-    // 1️⃣ Crear usuario
-    const newUser = await createUserService(
+    // 1️⃣ Crear usuario + membresía (todo en una función, que ya hace validación de duplicados)
+    const result = await createUserService(
       name,
       email,
       password,
       role || "user"
     );
+    const newUser = result.user;
+    const membership = result.membership;
 
-    // 2️⃣ Crear membresía inicial (ej. válida por 1 mes)
-    const startDate = dayjs().format("YYYY-MM-DD");
-    const endDate = dayjs().add(30, "day").format("YYYY-MM-DD");
+    console.log("✅ Usuario y membresía creados o existentes:", newUser, membership);
 
-    const membership = await createMembershipService(
-      newUser.id,
-      startDate,
-      endDate
-    );
-
-    console.log("✅ Membresía creada:", membership);
-
-    // 3️⃣ Generar texto encriptado limpio (para escáner)
+    // 2️⃣ Generar texto encriptado limpio (para escáner)
     const encryptedQR = encryptText(newUser.id.toString());
     console.log("🔐 Texto encriptado seguro para QR:", encryptedQR);
 
-    // 4️⃣ Generar imagen QR (base64) para email o frontend
+    // 3️⃣ Generar imagen QR (base64) para email o frontend
     const qrCodeDataURL = await QRCode.toDataURL(encryptedQR);
 
-    // 5️⃣ Guardar tanto el texto encriptado como la imagen QR en la DB
+    // 4️⃣ Guardar tanto el texto encriptado como la imagen QR en la DB
     await updateUserService(
       newUser.id,
       name,
@@ -57,7 +49,7 @@ export const createUser = async (req, res, next) => {
       true
     );
 
-    // 6️⃣ Enviar email con el QR
+    // 5️⃣ Enviar email con el QR
     await sendEmailWithQR(email, qrCodeDataURL, name);
 
     handleResponse(res, 201, "Usuario registrado con membresía y QR enviado", {
@@ -72,6 +64,7 @@ export const createUser = async (req, res, next) => {
     next(err);
   }
 };
+
 
 // El resto de métodos no cambian
 export const getAllUsers = async (req, res, next) => {
