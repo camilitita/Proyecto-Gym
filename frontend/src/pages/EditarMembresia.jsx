@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './EditarMembresia.css';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -100,81 +101,74 @@ const EditarMembresia = () => {
   if (error && !formData.start_date) return <p className="text-center mt-5 text-danger">{error}</p>;
 
   return (
-    <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Editar Membresía</h1>
+  <div className="registro-container">
+    <div className="registro-usuario">
+      <h2>Editar Membresía</h2>
 
-      <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <h6 className="m-0 font-weight-bold text-primary">Formulario de Edición de Membresía</h6>
+      {message && (
+        <div className="alert success" role="alert">
+          {message}
         </div>
-        <div className="card-body">
-          {message && (
-            <div className="alert alert-success" role="alert">
-              {message}
-            </div>
-          )}
-          {error && (
-            <div className="alert alert-danger" role="alert">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="start_date">Fecha de Inicio</label>
-              <input
-                type="date"
-                className="form-control"
-                id="start_date"
-                name="start_date"
-                value={formData.start_date}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="end_date">Fecha de Vencimiento</label>
-              <input
-                type="date"
-                className="form-control"
-                id="end_date"
-                name="end_date"
-                value={formData.end_date}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="is_active">Estado de la Membresía</label>
-              <select
-                className="form-control"
-                id="is_active"
-                name="is_active"
-                value={formData.is_active}
-                onChange={handleChange}
-              >
-                <option value="true">Activa</option>
-                <option value="false">Inactiva</option>
-              </select>
-            </div>
-
-            <button type="submit" className="btn btn-primary mt-3">
-              <i className="fas fa-save mr-2"></i> Guardar Cambios
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary mt-3 ml-2"
-              onClick={() => navigate('/admin/membresias')}
-            >
-              Cancelar
-            </button>
-          </form>
+      )}
+      {error && (
+        <div className="alert error" role="alert">
+          {error}
         </div>
-      </div>
+      )}
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="start_date">Fecha de Inicio</label>
+          <input
+            type="date"
+            id="start_date"
+            name="start_date"
+            value={formData.start_date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="end_date">Fecha de Vencimiento</label>
+          <input
+            type="date"
+            id="end_date"
+            name="end_date"
+            value={formData.end_date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="is_active">Estado de la Membresía</label>
+          <select
+            id="is_active"
+            name="is_active"
+            value={formData.is_active}
+            onChange={handleChange}
+          >
+            <option value="true">Activa</option>
+            <option value="false">Inactiva</option>
+          </select>
+        </div>
+
+        <button type="submit">
+          Guardar Cambios
+        </button>
+        <button
+          type="button"
+          style={{ marginTop: "10px" }}
+          onClick={() => navigate('/admin/membresias')}
+        >
+          Cancelar
+        </button>
+      </form>
     </div>
+  </div>
   );
+
 };
 
 export default EditarMembresia;

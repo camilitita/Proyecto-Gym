@@ -50,51 +50,53 @@ const RegistroUsuario = () => {
   };
 
   return (
-    <div className="registro-usuario">
-      <h2>Registro de Usuario</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Nombre completo</label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="registro-container">
+      <div className="registro-usuario">
+        <h2>Registro de Usuario</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Nombre completo</label>
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label>Correo electrónico</label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Rol</label>
-          <select name="role" value={form.role} onChange={handleChange}>
-            <option value="user">Usuario</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
+          <div className="form-group">
+            <label>Rol</label>
+            <select name="role" value={form.role} onChange={handleChange}>
+              <option value="user">Usuario</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Registrando..." : "Registrar"}
-        </button>
-      </form>
+          <button type="submit" disabled={loading}>
+            {loading ? "Registrando..." : "Registrar"}
+          </button>
+        </form>
 
-      {message && (
-        <div
-          className={`alert ${message.type === "success" ? "success" : "error"}`}
-        >
-          {message.text}
-        </div>
-      )}
+        {message && (
+          <div
+            className={`alert ${message.type === "success" ? "success" : "error"}`}
+          >
+            {message.text}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

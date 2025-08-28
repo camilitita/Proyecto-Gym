@@ -54,4 +54,39 @@ router.get('/registro-acceso', async (req, res) => {
   }
 });
 
+//Rutas de Dashboard
+// 1️) Accesos de hoy
+router.get('/registro-acceso/today', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT COUNT(*) AS count
+        FROM registro_acceso
+        WHERE (fecha_acceso AT TIME ZONE 'America/Caracas')::date = CURRENT_DATE`
+    );
+    res.json({ count: parseInt(result.rows[0].count) });
+  } catch (error) {
+    console.error("❌ Error al obtener accesos de hoy:", error);
+    res.status(500).json({ count: 0 });
+  }
+});
+
+
+// 2️) Últimos N accesos (limit opcional)
+router.get('/registro-acceso/ultimos', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 3;
+    const result = await pool.query(
+      `SELECT ra.id, ra.fecha_acceso, u.name AS usuario_nombre
+        FROM registro_acceso ra
+        JOIN users u ON ra.usuario_id = u.id
+        ORDER BY ra.fecha_acceso DESC
+        LIMIT $1`,
+      [limit]
+    );
+    res.json({ data: result.rows });
+  } catch (error) {
+    console.error("❌ Error al obtener últimos accesos:", error);
+    res.status(500).json({ data: [] });
+  }
+});
 export default router;

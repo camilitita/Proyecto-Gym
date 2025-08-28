@@ -112,15 +112,6 @@ const Login = () => {
                         />
                     </div>
                     <div className="login-options">
-                        <label className="remember-me">
-                            <input
-                                type="checkbox"
-                                name="rememberMe"
-                                checked={formData.rememberMe}
-                                onChange={handleChange}
-                            />
-                            Recordarme
-                        </label>
                         <a href="#" onClick={handleForgotPassword} className="forgot-password">¿Olvidaste tu contraseña?</a>
                     </div>
                     {error && <div className="login-error-message">{error}</div>}

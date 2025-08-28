@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.editar-membresia-container {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.editar-membresia {
+  font-family: 'Lato', sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  min-width: 500px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.editar-membresia h1 {
+  text-align: center;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+.editar-membresia .form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.editar-membresia label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.editar-membresia input,
+.editar-membresia select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid #ffd700;
+  background-color: #000;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.editar-membresia select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffd700' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.editar-membresia select:hover {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
+}
+
+.editar-membresia input:focus,
+.editar-membresia select:focus {
+  border-color: #e6c200;
+}
+
+.editar-membresia button {
+  background-color: #ffd700;
+  border: 2px solid transparent;
+  color: #000;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editar-membresia button:hover {
+  border-color: #ffd700;
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: transparent !important;
+  border: 2px solid #ffd700 !important;
+  color: #ffd700 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #ffd700 !important;
+  color: #000 !important;
+}
+
+.alert {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.alert-success {
+  background-color: #1b3d1b;
+  border: 2px solid #4caf50;
+}
+
+.alert-danger {
+  background-color: #3d1b1b;
+  border: 2px solid #f44336;
+}

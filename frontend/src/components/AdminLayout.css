@@ -61,6 +61,17 @@
   transition: color 0.3s ease;
 }
 
+.logout span {
+  color: #fff;
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+
+.logout span:hover {
+  color:  #ffd500;
+}
+
 /* Hover: fondo amarillo, texto negro, ícono negro */
 .nav-item a:hover {
   background-color: #ffd500 !important;

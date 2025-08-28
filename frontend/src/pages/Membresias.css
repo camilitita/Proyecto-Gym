@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+.membresias-container {
+    font-family: 'Lato', sans-serif;
+    background-color: transparent;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* Título principal */
+.membresias-container h1 {
+    font-weight: 700 !important;
+    color: #ffd700 !important;
+    margin-bottom: 20px !important;
+    font-size: 40px !important;
+}
+
+.membresias-container h6 {
+    font-weight: 700;
+    color: #ffd700 !important;
+    margin-bottom: 20px;
+}
+/* Tarjetas */
+.membresias-container .card {
+    background-color: #2a2a2a;
+    border: 2px solid #333;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.membresias-container .card-header {
+    background-color: #000;
+    color: #ffd700;
+    font-weight: 700;
+}
+
+.membresias-container .card-body {
+    background-color: #000 !important;
+    font-weight: 600;
+}
+
+
+.membresias-container tbody, td, tfoot, tr{
+    background-color: transparent !important;
+    font-weight: 600;
+    color: #f1f1f1 !important;
+}
+
+.membresias-container thead {
+    background-color: transparent !important;
+    font-weight: 600;
+    color: #ffd700 !important;
+}
+
+/* Tablas */
+.membresias-container table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: #000 !important;
+}
+
+.usuarios-container table .table-bordered {
+    border: 1px solid #969696 !important;
+}
+
+.membresias-container th,
+.membresias-container td {
+    padding: 12px;
+    border: 1px solid #444 !important;
+}
+
+.membresias-container thead th {
+    background-color: #000;
+    color: #ffd700;
+}
+
+.membresias-container tbody tr {
+    background-color: #242424;
+}
+
+/* Badges */
+.badge-success {
+    background-color: #28a745;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+/* Botones */
+.membresias-container .btn {
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-weight: 700;
+}
+
+.membresias-container .btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: #fff;
+}
+
+.membresias-container .btn-info:hover {
+    background-color: #138496;
+}
+
+.membresias-container .btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #000;
+}
+
+.membresias-container .btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.membresias-container .btn-success {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+}
+
+.membresias-container .btn-success:hover {
+    background-color: #218838;
+}

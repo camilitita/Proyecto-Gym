@@ -1,12 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
+.escaneo-qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh !important;
+}
+
 .escaneo-qr {
+    align-self: center !important;
     font-family: 'Lato', sans-serif;
     background-color: #1e1e1e;
     color: #fff;
     padding: 20px;
     border-radius: 12px;
-    max-width: 700px;
+    min-width: 700px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -86,10 +94,11 @@
 
 /* Resultado */
 .escaneo-qr .resultado {
-    margin-top: 20px;
-    text-align: center;
-    padding: 15px;
-    border-radius: 8px;
+    margin-top: 20px !important;
+    text-align: center !important;
+    justify-content: center;
+    padding: 15px !important;
+    border-radius: 8px !important;
 }
 
 .escaneo-qr .resultado.success {
@@ -100,4 +109,10 @@
 .escaneo-qr .resultado.error {
     background-color: #3d1b1b;
     border: 2px solid #f44336;
+    font-size: 16px;
+    color: white;
+}
+
+.escaneo-qr .resultado.error p {
+  margin: 0;
 }

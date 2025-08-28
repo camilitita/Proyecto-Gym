@@ -1,8 +1,20 @@
 import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import MamisFitnessLogoSVG from '../assets/MamisFitnessLogoSVG.png';
 import './AdminLayout.css';
+
 const AdminLayout = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 1. Eliminar datos de sesión
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+
+    // 2. Redirigir al login y bloquear retroceso
+    navigate("/", { replace: true });
+  };
+
   return (
     <div id="wrapper">
       {/* Sidebar */}
@@ -30,9 +42,7 @@ const AdminLayout = () => {
         <hr className="sidebar-divider" />
 
         {/* Heading */}
-        <div className="sidebar-heading">
-          Módulos
-        </div>
+        <div className="sidebar-heading">Módulos</div>
 
         {/* Nav Item - Usuarios */}
         <li className="nav-item">
@@ -57,6 +67,8 @@ const AdminLayout = () => {
             <span>Escaneo QR</span>
           </Link>
         </li>
+
+        {/* Nav Item - Registro de Accesos */}
         <li className="nav-item">
           <Link className="nav-link" to="/admin/registro-accesos">
             <i className="fas fa-fw fa-book"></i>
@@ -66,6 +78,17 @@ const AdminLayout = () => {
 
         {/* Divider */}
         <hr className="sidebar-divider d-none d-md-block" />
+
+        {/* Logout Button */}
+        <li className="nav-item">
+          <button 
+            className="logout nav-link btn btn-link text-left w-100"
+            onClick={handleLogout}
+          >
+            <i className="fas fa-fw fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+          </button>
+        </li>
       </ul>
       {/* End of Sidebar */}
 
@@ -79,22 +102,24 @@ const AdminLayout = () => {
             <ul className="navbar-nav ml-auto">
               {/* Nav Item - User Information */}
               <li className="nav-item dropdown no-arrow">
-                <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                  <img className="img-profile rounded-circle" src="https://source.unsplash.com/Mv9hjnz_J8U/60x60" alt="Profile"/>
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+                    Douglas McGee
+                  </span>
+                  <img
+                    className="img-profile rounded-circle"
+                    src="https://source.unsplash.com/Mv9hjnz_J8U/60x60"
+                    alt="Profile"
+                  />
                 </a>
-                {/* Dropdown - User Information */}
-                <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                  <a className="dropdown-item" href="#">
-                    <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
-                  </a>
-                  <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
-                  </a>
-                </div>
               </li>
             </ul>
           </nav>
@@ -106,7 +131,6 @@ const AdminLayout = () => {
             <Outlet />
           </div>
           {/* /.container-fluid */}
-
         </div>
         {/* End of Main Content */}
 
@@ -119,7 +143,6 @@ const AdminLayout = () => {
           </div>
         </footer>
         {/* End of Footer */}
-
       </div>
       {/* End of Content Wrapper */}
     </div>

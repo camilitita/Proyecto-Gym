@@ -28,6 +28,15 @@ body {
   background-color: #373737; /* oscuro */
   color: #fff;
 }
+
+#content nav {
+  display: none;
+}
+
+footer {
+  display: none !important;
+}
+
 /* Estilos de títulos */
 h1 {
   font-family: 'Lato', sans-serif;

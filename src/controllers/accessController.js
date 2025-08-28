@@ -33,7 +33,7 @@ export const validateAccess = async (req, res, next) => {
       });
     }
 
-    const adminId = 1; // Temporal, cambiar por el admin real
+    const adminId = 29; // Temporal, cambiar por el admin real
 
     // Verificar si el acceso ya se registró en los últimos 2 minutos
     const recentlyAccessed = await pool.query(

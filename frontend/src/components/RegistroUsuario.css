@@ -1,13 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
+.registro-container {
+  display: flex;
+  min-height: 100vh;
+  min-width: 1000px;
+  justify-content: center;
+  align-items: center;
+}
+
 .registro-usuario {
     font-family: 'Lato', sans-serif;
     background-color: #1e1e1e;
     color: #fff;
     padding: 20px;
     border-radius: 12px;
-    max-width: 500px;
+    min-width: 500px;
     margin: 0 auto;
+
 }
 
 .registro-usuario h2 {
@@ -19,8 +28,8 @@
 
 .registro-usuario .form-group {
     margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .registro-usuario label {
@@ -30,34 +39,34 @@
 
 .registro-usuario input,
 .registro-usuario select {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 2px solid #ffd700;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    border: 2px solid #ffd700 !important;
     background-color: #000;
     color: #fff;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.3s ease;
+    font-size: 16px !important;
+    outline: none !important;
+    transition: all 0.3s ease !important;
 }
 
 /* Flechita negra → amarilla al hover */
 .registro-usuario select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffd700' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffd700' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 16px !important;
 }
 
 .registro-usuario select:hover {
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23ffffff' height='20' viewBox='0 0 24 24' width='20'><path d='M7 10l5 5 5-5z'/></svg>") !important;
 }
 
 .registro-usuario input:focus,
 .registro-usuario select:focus {
-    border-color: #e6c200;
+    border-color: #e6c200 !important;
 }
 
 .registro-usuario button {

@@ -70,44 +70,46 @@ export default function EscaneoQR() {
     }, [escaneando, iniciarCamara]);
 
     return (
-        <div className="escaneo-qr">
-            <h2>Escaneo de QR</h2>
+        <div className="escaneo-qr-container">
+            <div className="escaneo-qr">
+                <h2>Escaneo de QR</h2>
 
-            {!escaneando && (
-                <>
-                    <select
-                        className="select-camera"
-                        value={selectedDeviceId}
-                        onChange={(e) => setSelectedDeviceId(e.target.value)}
-                    >
-                        {devices.map((device, index) => (
-                            <option key={index} value={device.deviceId}>
-                                {device.label || `Cámara ${index + 1}`}
-                            </option>
-                        ))}
-                    </select>
-                    <button className="btn-scan" onClick={() => setEscaneando(true)}>
-                        Iniciar escaneo
-                    </button>
-                </>
-            )}
+                {!escaneando && (
+                    <>
+                        <select
+                            className="select-camera"
+                            value={selectedDeviceId}
+                            onChange={(e) => setSelectedDeviceId(e.target.value)}
+                        >
+                            {devices.map((device, index) => (
+                                <option key={index} value={device.deviceId}>
+                                    {device.label || `Cámara ${index + 1}`}
+                                </option>
+                            ))}
+                        </select>
+                        <button className="btn-scan" onClick={() => setEscaneando(true)}>
+                            Iniciar escaneo
+                        </button>
+                    </>
+                )}
 
-            {escaneando && <video ref={videoRef} autoPlay muted playsInline />}
+                {escaneando && <video ref={videoRef} autoPlay muted playsInline />}
 
-            {resultado && (
-                <div className={`resultado ${resultado.status}`}>
-                    {resultado.status === "success" ? (
-                        <>
-                            <p>✅ {resultado.data.message}</p>
-                            <p>👤 {resultado.data.name}</p>
-                            <p>📧 {resultado.data.email}</p>
-                            <p>📅 Membresía hasta: {resultado.data.end_date}</p>
-                        </>
-                    ) : (
-                        <p>❌ {resultado.message}</p>
-                    )}
-                </div>
-            )}
+                {resultado && (
+                    <div className={`resultado ${resultado.status}`}>
+                        {resultado.status === "success" ? (
+                            <>
+                                <p>✅ {resultado.data.message}</p>
+                                <p>👤 {resultado.data.name}</p>
+                                <p>📧 {resultado.data.email}</p>
+                                <p>📅 Membresía hasta: {resultado.data.end_date}</p>
+                            </>
+                        ) : (
+                            <p>❌ {resultado.message}</p>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
